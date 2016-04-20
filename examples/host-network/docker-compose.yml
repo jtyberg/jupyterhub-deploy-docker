@@ -1,0 +1,24 @@
+# JupyterHub docker-compose configuration that uses host network
+
+version: "2"
+
+services:
+  hub:
+    extends: # hub service in repository root directory
+      file: ../../docker-compose.yml
+      service: hub
+    network_mode: "host"
+    volumes:
+     - "secrets:/etc/letsencrypt"
+    environment:
+      SSL_KEY: "/etc/letsencrypt/privkey.pem"
+      SSL_CERT: "/etc/letsencrypt/cert.pem"
+
+# Explicitly declare volume dependencies (they cannot be extended)
+volumes:
+  data:
+    external:
+      name: ${DATA_VOLUME_HOST}
+  secrets:
+    external:
+      name: ${SECRETS_VOLUME}
